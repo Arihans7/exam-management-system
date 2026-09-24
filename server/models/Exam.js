@@ -14,10 +14,14 @@ const examSchema = new mongoose.Schema(
       trim: true,
     },
 
-    section: {
-      type: String,
-      required: [true, "Section is required"],
-      trim: true,
+    // Advanced: one exam can belong to multiple sections
+    sections: {
+      type: [String],
+      required: [true, "At least one section is required"],
+      validate: {
+        validator: (value) => Array.isArray(value) && value.length > 0,
+        message: "At least one section is required",
+      },
     },
 
     examDate: {
@@ -35,6 +39,27 @@ const examSchema = new mongoose.Schema(
       type: String,
       required: [true, "End time is required"],
       trim: true,
+    },
+
+    // Advanced: rooms assigned to this exam
+    rooms: [
+      {
+        roomId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Room",
+        },
+        capacity: Number,
+        studentsAssigned: {
+          type: Number,
+          default: 0,
+        },
+      },
+    ],
+
+    status: {
+      type: String,
+      enum: ["scheduled", "cancelled"],
+      default: "scheduled",
     },
   },
   {
