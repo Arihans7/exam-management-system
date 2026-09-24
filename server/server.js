@@ -9,13 +9,14 @@ const examRoutes = require("./routes/examRoutes");
 const authRoutes = require("./routes/authRoutes");
 const { protect } = require("./middleware/authMiddleware");
 const errorHandler = require("./middleware/errorMiddleware");
-
+const roomRoutes = require("./routes/roomRoutes");
 const app = express();
 
 connectDB();
 
 app.use(cors());
 app.use(express.json());
+app.use("/api/rooms", roomRoutes);
 
 app.get("/", (req, res) => {
   res.json({
